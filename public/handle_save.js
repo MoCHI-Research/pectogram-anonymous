@@ -1,4 +1,5 @@
 const $saveButton = document.querySelector("#saveButton");
+const tooltip = document.getElementById('tooltip');
 
 async function handleSave() {
   // Grab current HTML content in card window.
@@ -9,8 +10,17 @@ async function handleSave() {
 
   // Format HTML content into image-label pairs and put it into an array
   document.querySelectorAll(".PECS-pair").forEach((image_pair) => {
+    let originalUrl = image_pair.querySelector("img").src;
+    let processedUrl = originalUrl;
+
+    // Check if URL contains localhost:3000
+    if (originalUrl.includes("localhost:3000")) {
+      // Extract everything after localhost:3000/
+      processedUrl = originalUrl.split("localhost:3000/")[1];
+    }
+
     image_pairs.push({
-      url: image_pair.querySelector("img").src,
+      url: processedUrl,
       label: image_pair.querySelector("label").innerText,
     });
   });
@@ -27,4 +37,11 @@ async function handleSave() {
 
 $saveButton.addEventListener("click", async (e) => {
   handleSave();
+  // Show tooltip
+  tooltip.classList.remove('hidden');
+  
+  // Hide after 2 seconds
+  setTimeout(() => {
+    tooltip.classList.add('hidden');
+  }, 2000);
 });
