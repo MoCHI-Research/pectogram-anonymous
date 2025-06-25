@@ -1,0 +1,27 @@
+{% extends "layout.njk" %}
+{% block content %}
+<div class="upload-img-window">
+    <h1>Upload a New Image!</h1>
+
+    {%if error %}
+    <div class='error p-4 bg-red-200 border-2 border-red-600 text-red-600 rounded-md'>
+        <b>Error: </b> {{error}}
+    </div>
+    {%endif %}
+
+    <form action="/upload-img" method="POST" enctype="multipart/form-data">
+        <div>
+            <label for="image">Upload your image here:</label>
+            <input type="file" class='hover:cursor-pointer hover:bg-blue-200 transition' accept="image/png, image/jpeg" id="image" name="image">
+        </div>
+        <div>
+            <label for="image-label">Enter your image label here:</label>
+            <input type="text" id="image_label" placeholder='Example: Aunt Suzy' name="image_label">
+        </div>
+        <input type="submit" value="Confirm">
+    </form>
+    <div>
+        <span><a href="/profile">Go back?</a></span>
+    </div>
+</div>
+{% endblock %}

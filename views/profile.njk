@@ -1,0 +1,42 @@
+{% extends "layout.njk" %} {% block content %}
+<div class="profile-window bg-blue-100 w-full p-5 space-y-10 rounded-md shadow-lg shadow-blue-300/50 md:w-1/2 mx-auto">
+  <h1 class="text-5xl mx-auto text-blue-800 w-fit mt-5">{{ username }}'s Profile</h1>
+  <div class="rounded-md overflow-hidden">
+    <h2 class="p-3 px-5 bg-blue-500 text-white text-3xl">Saved Prompts</h2>
+    <div class="saved-prompts-window bg-blue-200 p-3">
+      <div class="saved-prompt">
+        <div class="saved-images-for-prompt">
+          <div class="saved-image text-center w-fit mx-auto space-y-3">
+            <img alt='placeholder.gif' src="placeholder.gif" />
+            <label>Image placeholder</label>
+          </div>
+        </div>
+        <div class="prompt">Prompt placeholder</div>
+      </div>
+    </div>
+  </div>
+  <div class="rounded-md overflow-hidden">
+    <h2 class="p-3 px-5 bg-blue-500 text-white text-3xl">Saved Images</h2>
+    <div class="saved-images-window bg-blue-200 p-3 mb-5 space-y-4 md:flex md:flex-wrap md:gap-4 md:py-4">
+
+      {% for image_pair in image_pairs %}
+        <div class="saved-image md:w-1/4 text-center h-fit items-center justify-center w-fit mx-auto space-y-3 bg-white shadow-md rounded-md shadow-blue-500/50 overflow-hidden">
+          {# label is kind of broken #}
+          <img 
+            src={{ image_pair.img_url }}
+            alt={{ image_pair.label}} 
+            loading="lazy"
+            class='block'
+          >
+          <label class='bg-blue-600 text-white w-full block'>{{ image_pair.label }}</label>
+        </div>
+      {% else %}
+        <div class="saved-image text-center items-center justify-center w-fit mx-auto space-y-3">
+          <label>Your image pairs will appear here.</label>
+        </div>
+      {% endfor %}
+    </div>
+    <a class='block' href='/upload-img'><button class='m-2 md:w-1/3 text-2xl py-3 mx-auto block p-0'>Add a new image!</button></a>
+  </div>
+</div>
+{% endblock %}

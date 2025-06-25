@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Zain", "sans-serif";
+}
+
+@layer base {
+  body {
+    font-family: var(--font-display);
+  }
+  header {
+    @apply bg-blue-800 text-white text-2xl p-4 flex justify-between;
+  }
+  header > .options > a:first-child {
+    @apply bg-white px-2 mx-2 text-blue-800 rounded-md transition 
+            hover:bg-blue-100 
+            focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 
+            active:bg-blue-500;
+  }
+  main {
+    @apply text-xl mx-auto w-5/6 my-6;
+  }
+}
+
+@layer components {
+  .input-container {
+    @apply flex flex-wrap space-y-2 my-2 justify-evenly 
+            md:flex-nowrap md:items-center md:space-y-0;
+  }
+  .input-container > input {
+    @apply bg-blue-100 p-3 w-full rounded-md border-1 border-blue-500
+            md:mr-2
+            focus:outline-2 focus:outline-offset-2 focus:outline-blue-500  
+            placeholder:text-[#0243AC] md:grow md:w-fit
+            disabled:bg-gray-100 disabled:placeholder:text-gray-400 disabled:border-gray-500;
+  }
+  button,
+  .signup-window > form > input,
+  .login-window > form > input,
+  .upload-img-window > form > input {
+    @apply bg-blue-800 text-white p-3 shadow-xs shadow-blue-700/50 rounded-md w-full 
+            md:shrink md:w-fit transition 
+            hover:cursor-pointer hover:bg-blue-900 hover:shadow-none hover:inset-shadow-sm hover:inset-shadow-black 
+            focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 
+            active:bg-blue-700;
+  }
+  .options-container {
+    @apply flex my-2 flex-wrap
+            md:justify-between;
+  }
+  .options-container > .button-options {
+    @apply w-full space-x-2 flex 
+            md:w-fit;
+  }
+  .button-options > button {
+    @apply md:w-30;
+  }
+  .options-container > .regen-options {
+    @apply w-full rounded-md text-blue-800 bg-blue-100/50 mt-2 p-2
+            md:w-fit;
+  }
+  .toggle-div {
+    @apply flex items-center cursor-pointer justify-between
+            focus:outline-2 focus:outline-offset-2 focus:outline-blue-500;
+  }
+  .toggle-div > label {
+    @apply md:mr-20;
+  }
+  .toggle-div > div {
+    @apply block relative bg-black w-16 h-9 p-1 rounded-full transition-all
+            before:absolute before:bg-white before:w-7 before:h-7 before:p-1 before:rounded-full before:transition-all before:duration-500 before:left-1 
+            peer-checked:before:left-8 peer-checked:before:bg-white peer-checked:bg-blue-800
+            text-right text-white px-2
+            peer-checked:text-left;
+  }
+  #PECSGenerator {
+    @apply bg-center bg-no-repeat bg-size-[auto_100px] w-full min-h-96 h-fit bg-blue-200 rounded-md
+            flex flex-wrap space-x-2 justify-around items-center
+            md:justify-center;
+  }
+  .PECS-pair {
+    @apply p-2 h-fit rounded-md text-center bg-white my-7;
+  }
+  .PECS-pair > img {
+    @apply block rounded-md max-w-[256px]
+            hover:brightness-50 hover:cursor-pointer
+            focus:brightness-50 focus:cursor-pointer focus:outline-2 focus:outline-offset-2 focus:outline-blue-500 
+            active:brightness-50 active:cursor-pointer;
+  }
+  .PECS-pair > label {
+    @apply block text-2xl pt-2;
+  }
+
+  dialog {
+    margin: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @apply shadow-lg shadow-blue-800/10 p-4 rounded-md w-4/5 md:w-1/3;
+  }
+
+  dialog > button {
+    @apply mt-4 block md:w-full;
+  }
+
+  /* SIGNUP/LOGIN/UPLOAD-IMG STYLING */
+  .signup-window,
+  .login-window,
+  .upload-img-window {
+    @apply space-y-5 w-full text-blue-800 mx-auto p-5 px-10 bg-blue-100 shadow-lg shadow-blue-300/50 rounded-md md:w-1/2;
+  }
+
+  .signup-window > h1,
+  .login-window > h1,
+  .upload-img-window > h1 {
+    @apply text-center mt-5 text-4xl;
+  }
+
+  .signup-window > form,
+  .login-window > form,
+  .upload-img-window > form {
+    @apply w-full space-y-5;
+  }
+
+  .signup-window > form > div,
+  .login-window > form > div,
+  .upload-img-window > form > div {
+    @apply space-y-2;
+  }
+
+  .signup-window > form > div > label,
+  .login-window > form > div > label,
+  .upload-img-window > form > div > label {
+    @apply block;
+  }
+
+  .signup-window > form > div > input,
+  .login-window > form > div > input,
+  .upload-img-window > form > div > input {
+    @apply w-full bg-white p-3 rounded-md focus:outline-2 focus:outline-blue-500 placeholder:text-blue-300;
+  }
+
+  .signup-window > form > input,
+  .login-window > form > input,
+  .upload-img-window > form > input {
+    @apply block mx-auto bg-blue-600 shadow-blue-500/50 my-10 w-full md:w-1/3;
+  }
+
+  .signup-window > div,
+  .login-window > div,
+  .upload-img-window > div {
+    @apply mx-auto w-fit mb-5;
+  }
+
+  .signup-window > div > span > a,
+  .login-window > div > span > a,
+  .upload-img-window > div > span > a {
+    @apply text-[#2b4cff];
+  }
+}

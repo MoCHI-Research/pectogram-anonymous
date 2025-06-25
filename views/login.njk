@@ -1,0 +1,25 @@
+{% extends "layout.njk" %}
+{% block content %}
+<div class="login-window">
+    <h1>Log Into Account!</h1>
+    {%if error %}
+        <div class='error p-4 bg-red-200 border-2 border-red-600 text-red-600 rounded-md'>
+            <b>Error: </b> {{error}}
+        </div>
+    {%endif %}
+    <form action="/login" method="post">
+        <div>
+            <label for="username">Enter your username here:</label>
+            <input placeholder="Username" type="text" id="username" name="username">
+        </div>
+        <div>
+            <label for="password">Enter your password here:</label>
+            <input placeholder="Password" type="password" id="password" name="password">
+        </div>
+        <input type="submit" value="Confirm">
+    </form>
+    <div>
+        <span>Don't have an acccount? <a href="/signup">Sign up here.</a></span>
+    </div>
+</div>
+{% endblock %}

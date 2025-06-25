@@ -1,0 +1,60 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<div class="input-container">
+  <label class='hidden' for='generatePrompt'>User inputs text into prompt here</label>
+  <input 
+          method="POST"
+          action="/generate"
+          id="generatePrompt" 
+          placeholder="Example: The apple is red." />
+  <button id="generateButton">Generate</button>
+</div>
+
+<div class="PECS-container">
+  <div id="PECSGenerator">
+  </div>
+
+  <div class="options-container">
+    <div class='button-options'>
+      <button>Save</button>
+      <button id='previousButton'>Previous</button>
+      <button id='helpButton'>Help</button>
+    </div>
+    <div class='regen-options'>
+      <label for="toggle" class="toggle-div">
+        <label for="image_regen">Image Regeneration</label>
+        <input type="checkbox" id="toggle" class="sr-only peer" name="image_regen">
+        <div>off</div>
+      </label>
+    </div>
+  </div>
+</div>
+
+<dialog class='help-modal'>
+  <div>
+    Enter text into the box below to generate your PECS. Please keep your prompts to eight words or fewer.
+    <br><br>
+    If you aren't satisfied with a generated image, click it to generate a new image.
+    <br><br>
+    Generating the images may take time, so make sure to wait before showing your student the images.
+  </div>
+  <button class='mx-auto md:w-1/3'>Got it!</button>
+</dialog>
+
+<script src="/handle_prompt.js"></script>
+<script src="/dialog.js"></script>
+<script>
+  {# Handles toggle text on/off #}
+  function changeTextOnToggle(){
+    if ($regenButton.checked) {
+      $label.textContent = "on";
+    } else {
+      $label.textContent = "off";
+    }
+  }
+  const $label = document.querySelector("#toggle + div")
+  $regenButton.addEventListener('change', changeTextOnToggle);
+  changeTextOnToggle(); // Initial toggle call to set correctly
+</script>
+{% endblock %}

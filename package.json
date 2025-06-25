@@ -1,0 +1,40 @@
+{
+  "name": "pectograms",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "tailwind:css": "postcss public/tailwind.css -o public/style.css -w",
+    "devstart": "nodemon ./bin/www && npm run tailwind:css",
+    "serverstart": "DEBUG=pectograms:* npm run devstart && npm run tailwind:css"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.8",
+    "aws-sdk": "^2.1692.0",
+    "bcrypt": "^6.0.0",
+    "child_process": "^1.0.2",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "debug": "^4.3.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-async-handler": "^1.2.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "http-errors": "~2.0.0",
+    "mongoose": "^8.15.1",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.1",
+    "nunjucks": "^3.2.4",
+    "passport": "^0.7.0",
+    "postcss-cli": "^11.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.10",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.8"
+  }
+}
