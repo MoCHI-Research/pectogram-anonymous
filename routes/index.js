@@ -18,6 +18,8 @@ router.post("/generate", index_controller.prompt_post);
 
 router.post("/tokenize", index_controller.prompt_tokenizer);
 
+router.post("/save-prompt", requireAuth, index_controller.prompt_save);
+
 router.get("/signup", auth_controller.render_signup);
 
 router.post("/signup", auth_controller.handle_signup);

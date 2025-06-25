@@ -9,10 +9,11 @@ const PromptSchema = new Schema({
   },
   img_pair_array: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "ImagePair",
+      label: { type: String },
+      url: { type: String },
     },
   ],
+  owner: { type: Schema.Types.ObjectId, ref: "Account", required: true },
 });
 
 // ======= START OF VIRTUALS =========

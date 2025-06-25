@@ -1,8 +1,10 @@
 const Account = require("../models/account");
 const ImagePair = require("../models/image_pair");
 const Prompt = require("../models/prompt");
+
 const imagesDict = require("../python_preprocess/images.json");
 const asyncHandler = require("express-async-handler");
+const requireAuth = require("../auth/middleware");
 
 const https = require("https");
 const agent = new https.Agent({
@@ -17,6 +19,26 @@ function titleCase(s) {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+
+// Request prompt save
+exports.prompt_save = asyncHandler(async (req, res, next) => {
+  let whole_label = "";
+  req.body.saved_prompt.forEach(async (pair) => {
+    whole_label += ` ${pair.label}`;
+  });
+
+  const newSavedPrompt = await Prompt.create({
+    prompt: whole_label,
+    img_pair_array: req.body.saved_prompt,
+    owner: req.user._id,
+  });
+
+  // Update user's account
+  await Account.findByIdAndUpdate(
+    req.user._id, // Use _id instead of id for consistency
+    { $push: { saved_prompts: newSavedPrompt._id } }
+  );
+});
 
 // Request prompt generation
 exports.prompt_tokenizer = asyncHandler(async (req, res, next) => {

@@ -17,7 +17,9 @@
 
   <div class="options-container">
     <div class='button-options'>
-      <button>Save</button>
+      {% if loggedIn %}
+      <button id='saveButton'>Save</button>
+      {% endif %}
       <button id='previousButton'>Previous</button>
       <button id='helpButton'>Help</button>
     </div>
@@ -57,4 +59,9 @@
   $regenButton.addEventListener('change', changeTextOnToggle);
   changeTextOnToggle(); // Initial toggle call to set correctly
 </script>
+
+{% if loggedIn %}
+<script src="/handle_save.js"></script>
+{% endif %}
+
 {% endblock %}

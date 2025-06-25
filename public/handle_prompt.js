@@ -76,7 +76,7 @@ function injectPrev() {
   $PECSGenerationWindow.insertAdjacentHTML("beforeend", promptStack.pop());
 }
 
-async function generateImageForWord(word, isRegen=false) {
+async function generateImageForWord(word, isRegen = false) {
   // console.log(`Generating image for ${word}...`)
 
   let engineered_prompt = `Create a bright, simple, and engaging image of: '${word}'.
@@ -93,7 +93,11 @@ async function generateImageForWord(word, isRegen=false) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ prompt: engineered_prompt, word: word, isRegen: isRegen}),
+    body: JSON.stringify({
+      prompt: engineered_prompt,
+      word: word,
+      isRegen: isRegen,
+    }),
   });
 
   // Retrieves the url (which is only valid for 60 minutes)

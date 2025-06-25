@@ -88,7 +88,8 @@ exports.handle_login = asyncHandler(async (req, res, next) => {
 exports.render_profile = asyncHandler(async (req, res, next) => {
   try {
     const user = await Account.findById(req.session.userId)
-      .populate("saved_image_pairs") // Properly chain populate
+      .populate("saved_image_pairs")
+      .populate("saved_prompts") // Properly chain populate
       .exec();
 
     if (!user) {
@@ -104,6 +105,7 @@ exports.render_profile = asyncHandler(async (req, res, next) => {
       username: user.username,
       loggedIn: true,
       image_pairs: user.saved_image_pairs || [],
+      saved_prompts: user.saved_prompts || [], // Add prompts to the template data
     });
   } catch (err) {
     console.error("Profile error:", err);
