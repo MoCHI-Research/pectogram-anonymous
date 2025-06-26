@@ -5,7 +5,6 @@ const requireAuth = require("../auth/middleware");
 const index_controller = require("../controllers/indexController");
 const auth_controller = require("../controllers/authController");
 
-
 /* GET home page.*/
 router.get("/", function (req, res, next) {
   res.render("index", {
@@ -19,6 +18,7 @@ router.post("/generate", index_controller.prompt_post);
 router.post("/tokenize", index_controller.prompt_tokenizer);
 
 router.post("/save-prompt", requireAuth, index_controller.prompt_save);
+router.delete("/delete-prompt/:promptId", requireAuth, index_controller.prompt_delete);
 
 router.get("/signup", auth_controller.render_signup);
 

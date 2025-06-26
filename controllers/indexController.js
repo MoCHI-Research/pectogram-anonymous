@@ -6,6 +6,10 @@ const imagesDict = require("../python_preprocess/images.json");
 const asyncHandler = require("express-async-handler");
 const requireAuth = require("../auth/middleware");
 
+const axios = require("axios");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { v4: uuidv4 } = require("uuid");
+
 const https = require("https");
 const agent = new https.Agent({
   keepAlive: true,
@@ -20,24 +24,122 @@ function titleCase(s) {
     .join(" ");
 }
 
+// Configure Digital Ocean Spaces client
+const s3Client = new S3Client({
+  endpoint: `https://${process.env.DO_SPACES_REGION}.digitaloceanspaces.com`,
+  region: process.env.DO_SPACES_REGION,
+  credentials: {
+    accessKeyId: process.env.DO_SPACES_KEY,
+    secretAccessKey: process.env.DO_SPACES_SECRET,
+  },
+  forcePathStyle: false, // Required for Digital Ocean Spaces
+});
+
+async function uploadToSpaces(imageBuffer, contentType) {
+  if (!process.env.DO_SPACES_BUCKET) {
+    throw new Error("DO_SPACES_BUCKET environment variable is not set");
+  }
+
+  const key = `dalle-images/${uuidv4()}.png`;
+
+  const params = {
+    Bucket: process.env.DO_SPACES_BUCKET, // Must be defined
+    Key: key,
+    Body: imageBuffer,
+    ACL: "public-read",
+    ContentType: contentType,
+  };
+
+  try {
+    await s3Client.send(new PutObjectCommand(params));
+    return `https://${process.env.DO_SPACES_BUCKET}.${process.env.DO_SPACES_REGION}.digitaloceanspaces.com/${key}`;
+  } catch (error) {
+    console.error("Upload error:", error);
+    throw error;
+  }
+}
+
+async function processDalleImage(url) {
+  try {
+    // Download the image
+    const response = await axios.get(url, {
+      responseType: "arraybuffer",
+    });
+
+    // Upload to Spaces
+    const newUrl = await uploadToSpaces(
+      response.data,
+      response.headers["content-type"]
+    );
+
+    return newUrl;
+  } catch (error) {
+    console.error("Error processing DALL·E image:", error);
+    return url; // Return original if fails
+  }
+}
+
 // Request prompt save
 exports.prompt_save = asyncHandler(async (req, res, next) => {
   let whole_label = "";
-  req.body.saved_prompt.forEach(async (pair) => {
-    whole_label += ` ${pair.label}`;
-  });
+
+  // Process each image pair
+  const processedPairs = await Promise.all(
+    req.body.saved_prompt.map(async (pair) => {
+      whole_label += ` ${pair.label}`;
+
+      // Check for DALL·E URL
+      if (pair.url.startsWith("https://oaidalleapiprodscus")) {
+        const newUrl = await processDalleImage(pair.url);
+        return { ...pair, url: newUrl };
+      }
+      return pair;
+    })
+  );
 
   const newSavedPrompt = await Prompt.create({
     prompt: whole_label,
-    img_pair_array: req.body.saved_prompt,
+    img_pair_array: processedPairs, // Use processed pairs
     owner: req.user._id,
   });
 
-  // Update user's account
-  await Account.findByIdAndUpdate(
-    req.user._id, // Use _id instead of id for consistency
-    { $push: { saved_prompts: newSavedPrompt._id } }
-  );
+  await Account.findByIdAndUpdate(req.user._id, {
+    $push: { saved_prompts: newSavedPrompt._id },
+  });
+
+  res.status(201).json({
+    success: true,
+    data: newSavedPrompt,
+  });
+});
+
+// Request prompt deletion
+exports.prompt_delete = asyncHandler(async (req, res, next) => {
+  try {
+    // Find the image pair
+    const savedPrompt = await Prompt.findById(req.params.promptId);
+    if (!savedPrompt) {
+      return res.status(404).json({ error: "Prompt not found" });
+    }
+
+    // Verify ownership
+    if (savedPrompt.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    // Delete from database
+    await Prompt.findByIdAndDelete(req.params.promptId);
+
+    // Remove reference from user account
+    await Account.findByIdAndUpdate(req.user._id, {
+      $pull: { saved_prompts: req.params.promptId },
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ error: "Failed to delete prompt" });
+  }
 });
 
 // Request prompt generation

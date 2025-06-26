@@ -9,8 +9,9 @@
     "serverstart": "DEBUG=pectograms:* npm run devstart && npm run tailwind:css"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.837.0",
     "@tailwindcss/postcss": "^4.1.8",
-    "aws-sdk": "^2.1692.0",
+    "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "child_process": "^1.0.2",
     "cookie-parser": "^1.4.6",
@@ -27,7 +28,9 @@
     "multer": "^2.0.1",
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
-    "postcss-cli": "^11.0.1"
+    "postcss-cli": "^11.0.1",
+    "sharp": "^0.34.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
